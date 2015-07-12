@@ -13,6 +13,7 @@
 		9DFAC6E01B52669D00AC0E3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DFAC6DF1B52669D00AC0E3B /* Images.xcassets */; };
 		9DFAC6E31B52669D00AC0E3B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9DFAC6E11B52669D00AC0E3B /* LaunchScreen.xib */; };
 		9DFAC6EF1B52669D00AC0E3B /* iosFontCatalogueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFAC6EE1B52669D00AC0E3B /* iosFontCatalogueTests.swift */; };
+		9DFAC6F91B52679300AC0E3B /* FontsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFAC6F81B52679300AC0E3B /* FontsTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		9DFAC6E81B52669D00AC0E3B /* iosFontCatalogueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosFontCatalogueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DFAC6ED1B52669D00AC0E3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9DFAC6EE1B52669D00AC0E3B /* iosFontCatalogueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosFontCatalogueTests.swift; sourceTree = "<group>"; };
+		9DFAC6F81B52679300AC0E3B /* FontsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontsTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				9DFAC6DF1B52669D00AC0E3B /* Images.xcassets */,
 				9DFAC6E11B52669D00AC0E3B /* LaunchScreen.xib */,
 				9DFAC6D61B52669D00AC0E3B /* Supporting Files */,
+				9DFAC6F81B52679300AC0E3B /* FontsTableViewController.swift */,
 			);
 			path = iosFontCatalogue;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DFAC6DB1B52669D00AC0E3B /* ViewController.swift in Sources */,
+				9DFAC6F91B52679300AC0E3B /* FontsTableViewController.swift in Sources */,
 				9DFAC6D91B52669D00AC0E3B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
