@@ -25,16 +25,13 @@ class FontsTableViewController: UITableViewController {
         // load fonts to display
         let fontFamilyNames = UIFont.familyNames()
         for familyName in fontFamilyNames {
-            var key = familyName as! String
-            self._fonts[key] = [String]()
-            let names = UIFont.fontNamesForFamilyName(familyName as! String) as! [String]
-            self._fonts[key] = names
+            self._fonts[familyName] = UIFont.fontNamesForFamilyName(familyName)
         }
         
         // add and sort section titles
-        self._sectionTitles = self._fonts.keys.array.sorted({
+        self._sectionTitles = self._fonts.keys.sort {
             $0 < $1 // implicit block return
-        })
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -61,14 +58,14 @@ class FontsTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("FontNameCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("FontNameCell", forIndexPath: indexPath)
         
         // Configure the cell...
-        var fontName = self._fonts[self._sectionTitles[indexPath.section]]![indexPath.row]
-        cell.textLabel?.text = fontName
+        let fontName = self._fonts[self._sectionTitles[indexPath.section]]![indexPath.row]
+        cell.textLabel?.text = fontName;
         
         dispatch_async(dispatch_get_main_queue(), {
-            var labelFont = UIFontDescriptor(name: fontName, size: 18.0)
+            let labelFont = UIFontDescriptor(name: fontName, size: 18.0);
             cell.textLabel?.font = UIFont(descriptor: labelFont, size: 0.0)
         })
         
