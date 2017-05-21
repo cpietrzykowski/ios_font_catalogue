@@ -23,13 +23,13 @@ class FontsTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
         // load fonts to display
-        let fontFamilyNames = UIFont.familyNames()
+        let fontFamilyNames = UIFont.familyNames
         for familyName in fontFamilyNames {
-            self._fonts[familyName] = UIFont.fontNamesForFamilyName(familyName)
+            self._fonts[familyName] = UIFont.fontNames(forFamilyName: familyName)
         }
         
         // add and sort section titles
-        self._sectionTitles = self._fonts.keys.sort {
+        self._sectionTitles = self._fonts.keys.sorted {
             $0 < $1 // implicit block return
         }
     }
@@ -41,30 +41,30 @@ class FontsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
         return self._sectionTitles.count
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
         return self._fonts[self._sectionTitles[section]]!.count
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return self._sectionTitles[section]
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("FontNameCell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "FontNameCell", for: indexPath)
         
         // Configure the cell...
         let fontName = self._fonts[self._sectionTitles[indexPath.section]]![indexPath.row]
         cell.textLabel?.text = fontName;
         
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             let labelFont = UIFontDescriptor(name: fontName, size: 18.0);
             cell.textLabel?.font = UIFont(descriptor: labelFont, size: 0.0)
         })
