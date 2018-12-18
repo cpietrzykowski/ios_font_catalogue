@@ -12,31 +12,31 @@
         <!--Fonts-->
         <scene sceneID="TkV-fZ-A3d">
             <objects>
-                <tableViewController title="Fonts" id="fE1-3n-rBS" customClass="FontsTableViewController" customModule="iosFontCatalogue" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Fonts" definesPresentationContext="YES" id="fE1-3n-rBS" customClass="FontsTableViewController" customModule="iosFontCatalogue" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="pbh-Uc-Zg6">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FontNameCell" id="U3G-ue-yDj" customClass="FontNameTableViewCell" customModule="iosFontCatalogue" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="FontNameCell" id="U3G-ue-yDj" customClass="FontNameTableViewCell" customModule="iosFontCatalogue" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="U3G-ue-yDj" id="4tl-5O-63F">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="376" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="MKD-m4-dkC">
-                                            <rect key="frame" x="20" y="11" width="374" height="22"/>
+                                            <rect key="frame" x="20" y="11" width="348" height="22"/>
                                             <subviews>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ry7-Pl-lGT">
-                                                    <rect key="frame" x="0.0" y="0.0" width="20" height="22"/>
-                                                </activityIndicatorView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VTK-QK-vBG">
-                                                    <rect key="frame" x="24" y="0.0" width="350" height="22"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="324" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ry7-Pl-lGT">
+                                                    <rect key="frame" x="328" y="0.0" width="20" height="22"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                         </stackView>
                                     </subviews>
@@ -60,19 +60,8 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Fonts" id="b7c-MO-xTM"/>
-                    <connections>
-                        <outlet property="searchDisplayController" destination="H3g-1M-e9V" id="Ukp-Fq-KLI"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="klU-lH-oIP" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="H3g-1M-e9V">
-                    <connections>
-                        <outlet property="delegate" destination="fE1-3n-rBS" id="2Es-aj-4yu"/>
-                        <outlet property="searchContentsController" destination="fE1-3n-rBS" id="2g4-vB-9Ra"/>
-                        <outlet property="searchResultsDataSource" destination="fE1-3n-rBS" id="hMP-nv-NMG"/>
-                        <outlet property="searchResultsDelegate" destination="fE1-3n-rBS" id="Odr-WZ-4aM"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1082.608695652174" y="38.839285714285715"/>
         </scene>

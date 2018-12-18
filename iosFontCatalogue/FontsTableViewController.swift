@@ -63,19 +63,34 @@ class FontFamilySection {
 }
 
 // MARK: -
-class FontsTableViewController: UITableViewController {
+class FontsTableViewController: UITableViewController, UISearchResultsUpdating {
     
     // table sections
-    let sections: [FontFamilySection]
+    let allSections: [FontFamilySection]
+    var filteredSections: [FontFamilySection]?
+    var sections: [FontFamilySection] {
+        get {
+            if self.searchController.isActive {
+                return self.filteredSections ?? []
+            }
+
+            return self.allSections
+        }
+    }
+    
+    let searchController = UISearchController(searchResultsController: nil)
+    var activeFilter: String = "" {
+        didSet {
+            self.filteredSections = self.allSections.filter({ $0.family.lowercased().contains(activeFilter.lowercased()) })
+            self.tableView.reloadData()
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         // load fonts to display
-        self.sections = UIFont.familyNames.map({ (family) -> FontFamilySection in
+        self.allSections = UIFont.familyNames.map({ (family) -> FontFamilySection in
             return FontFamilySection.init(family: family)
         }).sorted(by: { $0.family.localizedCaseInsensitiveCompare($1.family) == ComparisonResult.orderedAscending })
-        
-        // sort sections by family
-        self.sections.sort(by: { $0.family < $1.family })
         super.init(coder: aDecoder)
     }
     
@@ -83,6 +98,11 @@ class FontsTableViewController: UITableViewController {
         super.viewDidLoad()
         let device = UIDevice.current
         self.navigationItem.title = "\(device.systemName) \(device.systemVersion) Fonts"
+        
+        // configure search bar
+        self.searchController.searchResultsUpdater = self
+        self.searchController.obscuresBackgroundDuringPresentation = false
+        self.navigationItem.searchController = self.searchController
     }
     
     // MARK: - Table view data source
@@ -139,5 +159,9 @@ class FontsTableViewController: UITableViewController {
                 fontView.item = self.sections[selectedPath.section].items[selectedPath.row]
             }
         }
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        self.activeFilter = searchController.searchBar.text ?? ""
     }
 }
