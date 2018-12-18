@@ -8,114 +8,136 @@
 
 import UIKit
 
-class FontsTableViewController: UITableViewController {
+// MARK: -
+class FontNameTableViewCell: UITableViewCell {
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var activityView: UIActivityIndicatorView!
+    
+    var labelFont: UIFont? {
+        didSet {
+            self.activityView.stopAnimating()
+            if labelFont != oldValue {
+                self.nameLabel.font = labelFont
+            }
+        }
+    }
+}
 
-    var _fonts: [String: [String]] = [String: [String]]()
-    var _sectionTitles: [String] = [String]()
+// MARK: -
+class FontItem {
+    static let cache = NSCache<NSString, UIFont>()
+    
+    let name: String
+    
+    init(_ name: String) {
+        self.name = name
+    }
+    
+    func font(fontSize: CGFloat, _ completion: @escaping (UIFont?) -> ()) {
+        var rslt: UIFont? = nil
+        let k = "\(self.name)\(fontSize)" as NSString
+        if let cachedFont = type(of: self).cache.object(forKey: k) {
+            rslt = cachedFont
+        } else {
+            if let newFont = UIFont.init(name: self.name, size: fontSize) {
+                rslt = newFont
+                type(of: self).cache.setObject(newFont, forKey: k)
+            }
+        }
+        
+        completion(rslt)
+    }
+}
+
+// MARK: -
+class FontFamilySection {
+    let family: String
+    let items: [FontItem]
+    
+    init(family: String) {
+        self.family = family
+        self.items = UIFont.fontNames(forFamilyName: family).map({ (name) -> FontItem in
+            return FontItem.init(name)
+        }).sorted(by: { $0.name.localizedCaseInsensitiveCompare($1.name) == ComparisonResult.orderedAscending })
+    }
+}
+
+// MARK: -
+class FontsTableViewController: UITableViewController {
+    
+    // table sections
+    let sections: [FontFamilySection]
+    
+    required init?(coder aDecoder: NSCoder) {
+        // load fonts to display
+        self.sections = UIFont.familyNames.map({ (family) -> FontFamilySection in
+            return FontFamilySection.init(family: family)
+        }).sorted(by: { $0.family.localizedCaseInsensitiveCompare($1.family) == ComparisonResult.orderedAscending })
+        
+        // sort sections by family
+        self.sections.sort(by: { $0.family < $1.family })
+        super.init(coder: aDecoder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
-        // load fonts to display
-        let fontFamilyNames = UIFont.familyNames
-        for familyName in fontFamilyNames {
-            self._fonts[familyName] = UIFont.fontNames(forFamilyName: familyName)
-        }
-        
-        // add and sort section titles
-        self._sectionTitles = self._fonts.keys.sorted {
-            $0 < $1 // implicit block return
-        }
+        let device = UIDevice.current
+        self.navigationItem.title = "\(device.systemName) \(device.systemVersion) Fonts"
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return self._sectionTitles.count
+        return self.sections.count
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return self._fonts[self._sectionTitles[section]]!.count
+        return self.sections[section].items.count
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self._sectionTitles[section]
+        let section = self.sections[section]
+        return "\(section.family) (\(section.items.count))"
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FontNameCell", for: indexPath)
         
-        // Configure the cell...
-        let fontName = self._fonts[self._sectionTitles[indexPath.section]]![indexPath.row]
-        cell.textLabel?.text = fontName;
-        
-        DispatchQueue.main.async(execute: {
-            let labelFont = UIFontDescriptor(name: fontName, size: 18.0);
-            cell.textLabel?.font = UIFont(descriptor: labelFont, size: 0.0)
-        })
+        if let fontCell = cell as? FontNameTableViewCell {
+            let item = self.sections[indexPath.section].items[indexPath.row]
+            fontCell.activityView.startAnimating()
+            fontCell.nameLabel.text = item.name
+            item.font(fontSize: 18.0) { (font) in
+                DispatchQueue.main.async {
+                    if let fontCell = tableView.cellForRow(at: indexPath) as? FontNameTableViewCell {
+                        fontCell.labelFont = font
+                    }
+                }
+            }
+        }
         
         return cell
     }
-
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
+    
+    // MARK: - Index Support
+    
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return Set(self.sections.map({ $0.family.prefix(1) })).map({ String($0) }).sorted(by: { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending })
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    override func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+        return self.sections.firstIndex(where: { $0.family.starts(with: title) }) ?? 0
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
+    
+     // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if let fontView = segue.destination as? FontTableViewController {
+            if let selectedPath = self.tableView.indexPathForSelectedRow {
+                fontView.item = self.sections[selectedPath.section].items[selectedPath.row]
+            }
+        }
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
